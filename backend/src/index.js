@@ -5,11 +5,13 @@ import messageRoutes from "./routes/message.route.js"
 import {app,server} from "./lib/socket.js"
 import dotenv from "dotenv";
 import cors from "cors"
+import path from "path"
 import {connectDb} from "./lib/db.js";
 dotenv.config();
 
 
 const PORT  = process.env.PORT;
+const __dirname = path.resolve();
 
 // Increase body size limits to allow base64-encoded images
 app.use(express.json({ limit: "10mb" }));
@@ -22,6 +24,13 @@ app.use(cors({
 
 app.use("/api/auth",authRoutes);
 app.use("/api/messages",messageRoutes);
+
+if(process.env.NODE_ENV==="production"){
+    app.use(express.static(path.join(__dirname,"../frontend/dist")))        //for static file serving
+    app.get("*",(req,res)=>{
+        res.sendFile(path.join(__dirname,"../frontend","dist","index.html"));
+    })
+}
 
 
 server.listen(PORT,()=>{
