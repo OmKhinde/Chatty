@@ -1,5 +1,7 @@
 # Chatty
 
+🔗 **Live Demo:** https://chatty-8g58.onrender.com  
+
 Chatty is a real-time chat application built with a Node.js/Express + MongoDB backend and a React + Vite + TailwindCSS frontend. It supports JWT-based authentication, profile avatar uploads via Cloudinary, and live messaging via Socket.IO.
 
 ## Features
