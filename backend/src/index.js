@@ -2,12 +2,13 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.route.js"
 import messageRoutes from "./routes/message.route.js"
+import {app,server} from "./lib/socket.js"
 import dotenv from "dotenv";
 import cors from "cors"
 import {connectDb} from "./lib/db.js";
 dotenv.config();
 
-const app = express();
+
 const PORT  = process.env.PORT;
 
 // Increase body size limits to allow base64-encoded images
@@ -20,10 +21,10 @@ app.use(cors({
 }))
 
 app.use("/api/auth",authRoutes);
-app.use("/api/message",messageRoutes);
+app.use("/api/messages",messageRoutes);
 
 
-app.listen(PORT,()=>{
+server.listen(PORT,()=>{
     console.log(`server is running on the port  : ${PORT}`);
     connectDb();
 })
