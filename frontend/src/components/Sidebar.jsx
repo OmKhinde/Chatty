@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
-import SidebarSkeleton from "./skeletons/SidebarSkeleton";
+import  SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
 
 const Sidebar = () => {
@@ -14,9 +14,19 @@ const Sidebar = () => {
     getUsers();
   }, [getUsers]);
 
+  const onlineSet = new Set(onlineUsers);
+
   const filteredUsers = showOnlineOnly
-    ? users.filter((user) => onlineUsers.includes(user._id))
+    ? users.filter((user) => onlineSet.has(user._id))
     : users;
+
+    //major optimization on users for getting on upperside
+  const sortedUsers = [...filteredUsers].sort((a, b) => {
+    const aOnline = onlineSet.has(a._id);
+    const bOnline = onlineSet.has(b._id);
+    if (aOnline === bOnline) return 0;
+    return aOnline ? -1 : 1;
+  });
 
   if (isUsersLoading) return <SidebarSkeleton />;
 
@@ -43,7 +53,7 @@ const Sidebar = () => {
       </div>
 
       <div className="overflow-y-auto w-full py-3">
-        {filteredUsers.map((user) => (
+        {sortedUsers.map((user) => (
           <button
             key={user._id}
             onClick={() => setSelectedUser(user)}
@@ -59,7 +69,7 @@ const Sidebar = () => {
                 alt={user.fullname}
                 className="size-12 object-cover rounded-full"
               />
-              {onlineUsers.includes(user._id) && (
+              {onlineSet.has(user._id) && (
                 <span
                   className="absolute bottom-0 right-0 size-3 bg-green-500 
                   rounded-full ring-2 ring-zinc-900"
@@ -71,7 +81,7 @@ const Sidebar = () => {
             <div className="hidden lg:block text-left min-w-0">
               <div className="font-medium truncate">{user.fullname}</div>
               <div className="text-sm text-zinc-400">
-                {onlineUsers.includes(user._id) ? "Online" : "Offline"}
+                {onlineSet.has(user._id) ? "Online" : "Offline"}
               </div>
             </div>
           </button>

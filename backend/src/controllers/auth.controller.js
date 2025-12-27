@@ -45,7 +45,7 @@ export const signup = async (req,res)=>{
     }
 
   } catch (error) {
-    console.log("error in signup controller",error.message);
+    //console.log("error in signup controller",error.message);
     return res.status(500).json({message : "Internal Server Error"});
   }
 }
@@ -72,7 +72,7 @@ export const login = async (req,res)=>{
         });
 
     } catch (error) {
-        console.log("error in login controller",error.message);
+       // console.log("error in login controller",error.message);
         return res.status(500).json({message : "Internal Server Error"});
     }
 }
@@ -82,7 +82,7 @@ export const logout = (req,res)=>{
         res.cookie("jwt","",{maxAge :0});
         return res.status(200).json("User Logged Out Successfully");
     } catch (error) {
-        console.log("error in logout controller",error.message);
+        //console.log("error in logout controller",error.message);
         return res.status(500).json({message : "Internal Server Error"});
     }
 }
@@ -102,7 +102,7 @@ export const updateProfile = async (req,res)=>{
     return res.status(200).json(updatedUser);
 
     } catch (error) {
-        console.log("error in updateProfile controller",error.message);
+        //console.log("error in updateProfile controller",error.message);
         return res.status(500).json({message : "Internal Server Error"});
    
     }
@@ -112,7 +112,7 @@ export const checkAuth = (req,res)=>{
     try {
         return res.status(200).json(req.user)
     } catch (error) {
-        console.log("error in auth of user",error.message);
+        //console.log("error in auth of user",error.message);
         return res.status(500).json({message : "Internal Server Error"});
     }
 }

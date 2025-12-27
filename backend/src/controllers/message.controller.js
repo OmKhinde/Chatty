@@ -11,7 +11,7 @@ export  const getUsersForSidebar  = async (req,res)=>{
         const filteredUsers = await User.find({_id : {$ne : loggedInUser}}).select("-password");
         res.status(200).json(filteredUsers);
     } catch (error) {
-        console.log("error in getUsersForSidebar controller : ",error.message);
+        //console.log("error in getUsersForSidebar controller : ",error.message);
         res.status(500).json({message : "Internal Server Error"});
     }
 }
@@ -32,7 +32,7 @@ export const getMessages = async(req,res)=>{
         res.status(200).json(messages);
 
     } catch (error) {
-        console.log("error in getMessages controller : ",error.message);
+        //console.log("error in getMessages controller : ",error.message);
         res.status(500).json({message : "Internal Server Error"});
     }
 }
@@ -67,7 +67,7 @@ export const sendMessages = async (req,res)=>{
     
     res.status(200).json(newMessage)
    } catch (error) {
-        console.log("error in sendMessages controller : ",error.message);
+       // console.log("error in sendMessages controller : ",error.message);
         res.status(500).json({message : "Internal Server Error"});
    }
 
