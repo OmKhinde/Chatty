@@ -5,16 +5,26 @@ import MessageInputs from "./MessageInputs.jsx"
 import MessageSkeleton from './skeletons/MessageSkeleton.jsx';
 import formatMessageTime from "../lib/utils.js"
 import { useAuthStore } from '../store/useAuthStore.js';
+import { useRef } from 'react';
 
 
 function ChatContainer() {
 
-  const {selectedUser,messages,getMessages,isMessagesLoading } = useChatStore();
+  const {selectedUser,messages,getMessages,isMessagesLoading,subscribeToMessages,unSubscribeFromMessages } = useChatStore();
   const {authUser}  = useAuthStore();
+  const messageEndRef = useRef(null);
 
   useEffect(()=>{
     getMessages(selectedUser._id);
-  },[getMessages,selectedUser._id]);
+    subscribeToMessages();
+    return ()=> unSubscribeFromMessages();
+  },[getMessages,selectedUser._id,subscribeToMessages,unSubscribeFromMessages]);
+
+  useEffect(()=>{
+    if(messageEndRef.current && messages){
+      messageEndRef.current.scrollIntoView({behavior : "smooth"});
+    }
+  })
 
   if(isMessagesLoading){
       return (
@@ -34,16 +44,16 @@ function ChatContainer() {
         {messages.map((message) => (
           <div
             key={message._id}
-            className={`chat ${message.senderId === authUser._id ? "chat-start" : "chat-end"}`}
-            // ref={messageEndRef}
+            className={`chat ${message.senderID === authUser._id ? "chat-end" : "chat-start"}`}
+            ref={messageEndRef}
           >
             <div className=" chat-image avatar">
               <div className="size-10 rounded-full border">
                 <img
                   src={
-                    message.senderId === authUser._id
-                      ? authUser.profilePic || "/avatar.png"
-                      : selectedUser.profilePic || "/avatar.png"
+                    message.senderID === authUser._id
+                      ? authUser.profilepic || "/avatar.png"
+                      : selectedUser.profilepic || "/avatar.png"
                   }
                   alt="profile pic"
                 />
@@ -51,7 +61,7 @@ function ChatContainer() {
             </div>
             <div className="chat-header mb-1">
               <time className="text-xs opacity-50 ml-1">
-                {formatMessageTime(message.createdAt)};
+                {formatMessageTime(message.createdAt)}
               </time>
             </div>
             <div className="chat-bubble flex flex-col">
